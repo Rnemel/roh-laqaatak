@@ -1029,7 +1029,6 @@ function drawScene(){
     });
   } else if(level==='lobby'){
     ctx.fillStyle=C.dim;ctx.font='9px "Press Start 2P", Cairo';ctx.textAlign='left';
-    ctx.fillText('◀ خروج',8,HALL_BOT-8);
     stairs.forEach(s=>{
       const sx=s.x-camX;
       if(sx+70<-20||sx>VW+20)return;
@@ -1038,7 +1037,6 @@ function drawScene(){
     });
   } else if(level==='floor'){
     ctx.fillStyle=C.dim;ctx.font='9px "Press Start 2P", Cairo';ctx.textAlign='left';
-    ctx.fillText('◀ رجوع',8,HALL_BOT-8);
     hallDoors.forEach(d=>{
       const sx=d.x-camX;
       if(sx+DW<-20||sx>VW+20)return;
