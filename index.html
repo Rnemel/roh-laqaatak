@@ -352,7 +352,9 @@ let interact=null;
 let TICK=0;
 const START_TIME=(()=>{
   try{
-    const v=Number(new URLSearchParams(location.search).get('t'));
+    const sp=new URLSearchParams(location.search);
+    if(sp.get('test')!=='1')return 90;
+    const v=Number(sp.get('t'));
     if(Number.isFinite(v)&&v>0&&v<=600)return Math.floor(v);
   }catch(_){}
   return 90;
