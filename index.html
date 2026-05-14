@@ -350,6 +350,13 @@ let campusDoors=[],stairs=[],hallDoors=[];
 let reaction=null;
 let interact=null;
 let TICK=0;
+const START_TIME=(()=>{
+  try{
+    const v=Number(new URLSearchParams(location.search).get('t'));
+    if(Number.isFinite(v)&&v>0&&v<=600)return Math.floor(v);
+  }catch(_){}
+  return 90;
+})();
 
 const HS_KEY='ertiwa_high_score';
 const LS_KEY='ertiwa_last_score';
@@ -817,7 +824,7 @@ function startGame(){
   playerName=(pn||playerName||loadName()||'لاعب').trim()||'لاعب';
   saveName(playerName);
   startLoop('game');
-  score=0;combo=0;timeLeft=90;
+  score=0;combo=0;timeLeft=START_TIME;
   document.getElementById('sc').textContent=0;
   const td=document.getElementById('tm');td.textContent=fmtTime(timeLeft);td.classList.remove('low');
   document.getElementById('ov').classList.add('hide');
