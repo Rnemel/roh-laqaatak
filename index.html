@@ -2,28 +2,34 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>روح لقاعتك | ارتواء</title>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Cairo:wght@600;700;900&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-html,body{height:100%;}
+html,body{height:100%;width:100%;overflow:hidden;}
 :root{
   --pix:'Press Start 2P','Cairo','Tajawal',sans-serif;
   --arab:'Cairo','Tajawal',sans-serif;
+  --apph:100vh;
+}
+@supports (height: 100dvh){
+  :root{--apph:100dvh;}
 }
 body{
   background:#1a2930;color:#e8f5f0;font-family:var(--arab);
-  min-height:100vh;display:flex;flex-direction:column;align-items:stretch;justify-content:stretch;
+  min-height:var(--apph);display:flex;flex-direction:column;align-items:stretch;justify-content:stretch;
   overflow:hidden;user-select:none;-webkit-user-select:none;
+  overscroll-behavior:none;
 }
 /* ── wrapper */
-#G{display:flex;flex-direction:column;align-items:stretch;width:100vw;height:100vh;max-width:none;padding:0;}
+#G{position:fixed;inset:0;display:flex;flex-direction:column;align-items:stretch;width:100vw;height:var(--apph);max-width:none;padding:0;touch-action:none;}
 
 /* ── TOP HUD (only visible during play) */
 #hud{
   width:100%;display:flex;align-items:center;justify-content:space-between;
-  padding:7px 16px;background:rgba(37,50,59,0.97);
+  padding:calc(7px + env(safe-area-inset-top)) calc(16px + env(safe-area-inset-right)) 7px calc(16px + env(safe-area-inset-left));
+  background:rgba(37,50,59,0.97);
   border:1px solid rgba(40,181,143,0.28);border-radius:14px 14px 0 0;
 }
 .hb{display:flex;flex-direction:column;align-items:center;gap:1px;min-width:54px;}
@@ -45,7 +51,8 @@ canvas{display:block;width:100%;height:100%;image-rendering:pixelated;}
 #bar{
   width:100%;background:rgba(37,50,59,0.97);
   border:1px solid rgba(40,181,143,.28);border-radius:0 0 14px 14px;
-  padding:8px 12px;display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:8px calc(12px + env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) calc(12px + env(safe-area-inset-left));
+  display:flex;align-items:center;justify-content:center;gap:8px;
 }
 #msg{font-size:12px;color:rgba(232,245,240,.45);text-align:center;
   font-family:var(--arab);flex:1;line-height:1.45;}
@@ -306,7 +313,13 @@ const VW=560,VH=300;
 const cwEl=document.getElementById('cw');
 let DPR=1,SCALE=1,OX=0,OY=0;
 
+function setAppHeight(){
+  const h=Math.max(1,Math.round((window.visualViewport?.height)||window.innerHeight||0));
+  document.documentElement.style.setProperty('--apph',h+'px');
+}
+
 function resize(){
+  setAppHeight();
   const r=cwEl.getBoundingClientRect();
   DPR=window.devicePixelRatio||1;
   const pxW=Math.max(1,Math.round(r.width*DPR));
@@ -320,6 +333,11 @@ function resize(){
   cctx.imageSmoothingEnabled=false;
 }
 window.addEventListener('resize',resize);
+window.addEventListener('orientationchange',resize);
+if(window.visualViewport){
+  window.visualViewport.addEventListener('resize',resize);
+  window.visualViewport.addEventListener('scroll',resize);
+}
 
 const CEIL=65,FLOORH=52;
 const HALL_TOP=CEIL,HALL_BOT=VH-FLOORH,GROUND=HALL_BOT;
