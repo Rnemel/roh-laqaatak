@@ -60,32 +60,30 @@ canvas{display:block;width:100%;height:100%;image-rendering:pixelated;}
 #msg.bad{color:#ff8f8f;font-weight:700;}
 #msg.tip{color:#f4b942;}
 
-/* ── DPAD — perfect symmetric 3×3 */
+/* ── DPAD (left / interact / right) */
 #dp{
-  display:grid;grid-template-columns:repeat(3,40px);grid-template-rows:repeat(3,40px);
-  grid-template-areas:
-    ". up ."
-    "left act right"
-    ". down .";
+  display:grid;
+  grid-template-columns:repeat(3,56px);
+  grid-template-rows:56px;
+  grid-template-areas:"left act right";
   direction:ltr;
-  gap:4px;flex-shrink:0;
+  gap:10px;
+  flex-shrink:0;
 }
-#d-up{grid-area:up;}
 #d-left{grid-area:left;}
 #d-right{grid-area:right;}
-#d-down{grid-area:down;}
 #d-act{grid-area:act;}
 .db{
-  width:40px;height:40px;background:rgba(37,50,59,.85);
+  width:56px;height:56px;background:rgba(37,50,59,.85);
   border:1px solid rgba(40,181,143,.25);border-radius:10px;
   display:flex;align-items:center;justify-content:center;
-  font-size:15px;cursor:pointer;color:#e8f5f0;
+  font-size:22px;cursor:pointer;color:#e8f5f0;
   unicode-bidi:isolate;
   touch-action:none;-webkit-tap-highlight-color:transparent;
   transition:background .1s,border-color .1s;
 }
 .db:active,.db.on{background:rgba(40,181,143,.28);border-color:#28b58f;}
-.db.x{background:none;border:none;pointer-events:none;}
+.db.x{display:none;}
 
 /* ── OVERLAY — covers canvas only, IS the start/end screen */
 #ov{
@@ -276,15 +274,9 @@ canvas{display:block;width:100%;height:100%;image-rendering:pixelated;}
   <div id="bar" style="display:none">
     <div id="msg"></div>
     <div id="dp">
-      <div class="db x"></div>
-      <div class="db" id="d-up"    onpointerdown="dp('w',1)" onpointerup="dp('w',0)" onpointercancel="dp('w',0)">&#x25B2;&#xFE0E;</div>
-      <div class="db x"></div>
       <div class="db" id="d-left"  onpointerdown="dp('a',1)" onpointerup="dp('a',0)" onpointercancel="dp('a',0)">&#x25C0;&#xFE0E;</div>
       <div class="db" id="d-act" onpointerdown="act()" aria-label="تفاعل">⏎</div>
       <div class="db" id="d-right" onpointerdown="dp('d',1)" onpointerup="dp('d',0)" onpointercancel="dp('d',0)">&#x25B6;&#xFE0E;</div>
-      <div class="db x"></div>
-      <div class="db" id="d-down"  onpointerdown="dp('s',1)" onpointerup="dp('s',0)" onpointercancel="dp('s',0)">&#x25BC;&#xFE0E;</div>
-      <div class="db x"></div>
     </div>
   </div>
 </div>
@@ -517,7 +509,7 @@ function setMusic(on){
 
 function resetInputs(){
   K={};
-  ['d-up','d-down','d-left','d-right','d-act'].forEach(id=>document.getElementById(id)?.classList.remove('on'));
+  ['d-left','d-right','d-act'].forEach(id=>document.getElementById(id)?.classList.remove('on'));
 }
 
 function fmtTime(s){
@@ -530,7 +522,7 @@ function fmtTime(s){
 // ── dpad
 function dp(k,v){
   K[k]=!!v;
-  const nm={w:'up',s:'down',a:'left',d:'right'};
+  const nm={a:'left',d:'right'};
   document.getElementById('d-'+nm[k])?.classList.toggle('on',!!v);
 }
 
